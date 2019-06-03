@@ -26,6 +26,7 @@
     "ember-cli-dependency-checker": "^2.0.0",
     "ember-cli-eslint": "^4.2.1",
     "ember-cli-flash": "^1.6.2",
+    "ember-cli-head": "^0.4.1",
     "ember-cli-htmlbars": "^2.0.1",
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-cli-inject-live-reload": "^1.4.1",
@@ -54,11 +55,12 @@
     "node": "^4.5 || 6.* || >= 7.*"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.3.1",
     "ember-browserify": "^1.2.1",
     "express": "^4.16.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "jquery-ui": "^1.12.1",
-    "js-yaml": "^3.10.0"
+    "js-yaml": "^3.13.1",
+    "fstream": "^1.0.12"
   }
 }

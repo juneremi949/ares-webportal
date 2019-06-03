@@ -48,10 +48,12 @@ Router.map(function() {
   this.route('fs3combat-gear-detail', { path: '/fs3combat/gear/:type/:name' })
   this.route('fs3skills-abilities', { path: '/fs3skills/abilities' });
   this.route('game-edit');
+  this.route('groups');
   this.route('help');
   this.route('help-topic', { path: '/help/:topic' });
   this.route('jobs');
   this.route('job', { path: '/job/:id' });
+  this.route('job-create');
   this.route('locations');
   this.route('location', { path: '/location/:id'});
   this.route('location-edit', { path: '/location/:id/edit'});
@@ -74,13 +76,16 @@ Router.map(function() {
   this.route('recent-changes');
   this.route('register');
   this.route('roster');
+  this.route('routes');
   this.route('scenes');
   this.route('scenes-live');
+  this.route('scenes-play');
   this.route('scene', { path: '/scene/:id' } );
   this.route('scene-live', { path: '/scene-live/:id' });
   this.route('scene-edit', { path: '/scene/:id/edit' } );
   this.route('scene-download', { path: '/scene/:id/download' } );
   this.route('scene-create', { path: '/scene/create', query_params: ['location'] } );
+  this.route('search-locations');
   this.route('search-scenes');
   this.route('search-jobs');
   this.route('search-wiki');
@@ -107,7 +112,6 @@ Router.map(function() {
   // !!!!!!!!!!!!!!!!!!!!!!!!
 
   this.route('not-found', { path: '*:' });
-  this.route('job-create');
 });
 
 export default Router;

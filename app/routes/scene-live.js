@@ -27,9 +27,13 @@ export default Route.extend(ReloadableRoute, RouteResetOnExit, {
         return RSVP.hash({
              scene: api.requestOne('liveScene', { id: params['id'] }),
              abilities:  api.request('charAbilities', { id: this.get('session.data.authenticated.id') }),
-             locations: api.request('sceneLocations', { id: params['id'] }),
-             my_scenes: api.requestMany('myScenes')
+             locations: api.request('sceneLocations', { id: params['id'] })
            })
            .then((model) => Ember.Object.create(model));
+    },
+    
+    setupController: function(controller, model) {
+      this._super(controller, model);
+      this.set('model.is_unread', false);
     }
 });

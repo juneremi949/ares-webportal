@@ -34,6 +34,9 @@
             {{/if}}
         </p>
         
+        <p><b>Scene Number:</b> {{model.id}}</p>
+        
+        
         <div>
           
             
@@ -46,7 +49,7 @@
             <button {{action 'like' true}} class="badge badge-likes"><i class="far fa-heart" area-hidden="true"></i> {{model.likes}}</button>
             {{/if}}
         {{else}}
-            <button class="badge badge-likes"><i class="far fa-heart" area-hidden="true"></i> {{model.likes}}</button>
+            <span class="badge badge-likes"><i class="far fa-heart" area-hidden="true"></i> {{model.likes}}</span>
         {{/if}}
         
          </div>
@@ -101,7 +104,9 @@
                       <span class="btn btn-default" href="#" role="button">Scene Menu <span class="caret"></span></span> </a>
                       <ul class="dropdown-menu">
 
-                      {{#if model.can_edit}}
+                        <li><a href="#" {{action 'cookies'}}>Give Cookies</a></li>
+
+                        {{#if model.can_edit}}
 
                         <li>{{#link-to 'scene-edit' model.id}}Edit Scene{{/link-to}}</li>
                         <li><a href="#" {{action 'unshareScene'}}>Unshare Scene</a></li>

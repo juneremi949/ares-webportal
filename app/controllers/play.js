@@ -49,7 +49,7 @@ export default Controller.extend({
     let html = ansi_up.ansi_to_html(data.args.message);
     this.get('messages').pushObject(html);
     this.scrollToBottom();  
-    this.get('gameSocket').notify(null);
+    this.get('gameSocket').notify("");
   },
   onConnect: function(self) {
     document.getElementById("sendMsg").focus();
@@ -77,7 +77,7 @@ export default Controller.extend({
       
     try {
       $('#console').stop().animate({
-        scrollTop: $('#console')[0].scrollHeight
+        scrollTop: $('#console')[0].scrollHeight + 1000
       }, 800);           
     }
     catch(error) {

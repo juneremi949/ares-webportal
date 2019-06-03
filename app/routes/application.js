@@ -10,7 +10,19 @@ export default Route.extend(ApplicationRouteMixin, ReloadableRoute, {
     flashMessages: service(),
     gameSocket: service(),
     favicon: service(),
-    
+    headData: service(),
+  
+    afterModel(model) {
+      try {
+        this.set('headData.mushName', model.get('game.name'));
+        this.set('headData.portalUrl', this.get('gameApi').portalUrl());
+        this.set('headData.mushDesc', model.get('game.description'));  
+        }
+        catch(error) {
+          // Don't do anything here.
+        }
+      },
+      
     doReload: function() {
         this.loadModel().then( newModel => {
             this.controllerFor('application').set('sidebar', newModel);
@@ -26,6 +38,10 @@ export default Route.extend(ApplicationRouteMixin, ReloadableRoute, {
                 return { game_down: true };
             }
             response['socketConnected'] = this.get('gameSocket.connected');
+            
+            if (response.token_expiry_warning) {
+              this.get('flashMessages').warning(`Your login expires today (in ${response.token_expiry_warning}). You should log out and back in before that happens so you don't lose any work.`);
+            }
             return response;
         })
         .catch(() => {
@@ -68,6 +84,9 @@ export default Route.extend(ApplicationRouteMixin, ReloadableRoute, {
     actions: {
         willTransition() {
            this.doReload();
+        },
+        error(error) {
+            this.get('gameApi').reportError({ message: error });
         }
     }
 });

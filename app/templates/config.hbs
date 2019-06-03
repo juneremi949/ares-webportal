@@ -1,5 +1,7 @@
 {{title model.file}}
 <h1>Edit {{model.file}} Config</h1>
+
+<div class="alert alert-info">See the <a href="{{model.help}}">Configuration Help</a> for an explanation for all of these options.</div>
     
     {{#each-in config as |key config|}}
         <h2>{{config.key}} <button class="btn btn-default btn-sm" {{action 'removeKey' config.key}}><i class="fa fa-trash" aria-hidden="true"></i></button></h2>
@@ -18,6 +20,7 @@
     <div class="col col-xs-12">
         <div class="pull-right">
             {{#link-to 'setup' class="btn btn-default"}}Cancel{{/link-to}}
+            <button {{action (mut confirmRestore) true}}  class="btn btn-warning">Restore Defaults</button>
             {{#link-to 'textfile' 'config' model.file class="btn btn-default"}}Advanced Editor{{/link-to}}
             <button {{action 'save'}} class="btn btn-primary">Save</button>
         </div>
@@ -26,4 +29,18 @@
     </div>
 </div>
 
+
+{{#bs-modal-simple
+    title="Confirm Restore"
+    closeTitle="Cancel"
+    submitTitle="Confirm"
+    size=null
+    fade=false
+    open=confirmRestore
+    onSubmit=(action "restoreDefaults")
+    onHide=(action (mut confirmRestore) null)}}
+    This will revert this configuration file to the default settings. Are you sure?
+  {{/bs-modal-simple}}
+  
+  
 {{outlet}}

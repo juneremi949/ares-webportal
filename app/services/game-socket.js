@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 
 export default Service.extend({
     session: service(),
-    routing: service('-routing'),
+    router: service(),
     flashMessages: service(),
     favicon: service(),
     
@@ -11,6 +11,7 @@ export default Service.extend({
     socket: null,
     charId: null,
     chatCallback: null,
+    jobsCallback: null,
     sceneCallback: null,
     connected: false,
     
@@ -26,8 +27,14 @@ export default Service.extend({
         }
     },
     
+    highlightFavicon() {
+      if (!this.get('windowVisible')) {
+        this.get('favicon').changeFavicon(true);
+      }
+    },
+    
     // Regular alert notification
-    notify(msg, timeOutSecs = 5, type = 'success') {
+    notify(msg, timeOutSecs = 10, type = 'success') {
         
         if (msg) {
           alertify.notify(msg, type, timeOutSecs);
@@ -42,7 +49,7 @@ export default Service.extend({
                      
                   new Notification(`Activity in ${aresconfig.game_name}`, 
                     {
-                      icon: '/game/uploads/theme_images/favicon.ico',
+                      icon: '/game/uploads/theme_images/notification.png',
                       body: cleanMsg,
                       tag: aresconfig.game_name,
                       renotify: true
@@ -111,7 +118,16 @@ export default Service.extend({
         'data': { 'id': this.get('charId') }
       };
       let json = JSON.stringify(cmd);
-      return this.get('socket').send(json);
+      try {
+        let socket = this.get('socket');
+        if (socket) {
+          socket.send(json); 
+        }
+      }
+      catch(err) {
+        // Socket closed already.
+      }
+       
     },
     
     handleConnect() {
@@ -167,19 +183,30 @@ export default Service.extend({
             var notify = true;
             if (notification_type == "new_mail") {
               var mail_badge = $('#mailBadge');
-              var mail_count = mail_badge.text();
+              var mail_count = mail_badge.text() || '0';
               mail_count = parseInt( mail_count );
               mail_badge.text(mail_count + 1);                
             }
             else if (notification_type == "job_update") {
                 var job_badge = $('#jobBadge');
-                var job_count = job_badge.text();
+                var job_count = job_badge.text() || '0';
                 job_count = parseInt( job_count );
                 job_badge.text(job_count + 1);
+                
+                if (this.get('jobsCallback')) {
+                    this.get('jobsCallback')(data.args.message);
+                }
+                notify = false;
             }
             else if (notification_type == "new_chat") {
                 if (this.get('chatCallback')) {
-                    this.get('chatCallback')(data.args.message);
+                    this.get('chatCallback')(data.args.message, data.args.timestamp);
+                }
+                notify = false;
+            }
+            else if (notification_type == "new_page") {
+                if (this.get('chatCallback')) {
+                    this.get('chatCallback')(data.args.message, data.args.timestamp);
                 }
                 notify = false;
             }

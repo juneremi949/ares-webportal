@@ -1,7 +1,10 @@
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#systeminfo">+</a></li>
 
-
+  {{#if char.roster}}
+    <li><a data-toggle="tab" href="#rosternotes">Roster Info</a></li>
+  {{/if}}
+  
   <li><a data-toggle="tab" href="#systemhooks">RP Hooks</a></li>
 
   {{#if char.background}}
@@ -16,6 +19,9 @@
   {{#if (not game.disabled_plugins.fs3skills)}}
      {{#if char.fs3.show_sheet}}
       <li><a data-toggle="tab" href="#systemsheet">Sheet</a></li>
+      {{/if}}
+      {{#if char.fs3.xp}}
+      <li><a data-toggle="tab" href="#systemxp">XP</a></li>
       {{/if}}
   {{/if}}
   
@@ -35,7 +41,23 @@
   <div id="systeminfo" class="tab-pane fade in active">
       <div class="tab-cover">System Information</div>
   </div>
-        
+  {{#if char.roster}}
+  <div id="rosternotes" class="tab-pane fade">
+    {{{ansi-format text=char.roster.notes}}}
+    
+    <p>Contact: {{char.roster.contact}}</p>
+
+    {{#if char.roster.previously_played}}
+    <span class="label label-info">Previously Played</span>
+    {{/if}}
+
+    {{#if char.roster.app_required}}
+    <span class="label label-warning">App Required</span>
+    {{/if}}
+    
+  </div>
+  {{/if}}
+  
   <div id="systemhooks" class="tab-pane fade">
       {{{ansi-format text=char.rp_hooks}}}
   </div>
@@ -54,9 +76,16 @@
   {{/if}}
   
   {{#if (not game.disabled_plugins.fs3skills)}}
-  <div id="systemsheet" class="tab-pane fade">
-    {{fs3-sheet char=char}}
-  </div>
+    {{#if char.fs3.show_sheet}}
+      <div id="systemsheet" class="tab-pane fade">
+        {{fs3-sheet char=char}}
+      </div>
+     {{/if}}
+     {{#if char.fs3.xp}}
+      <div id="systemxp" class="tab-pane fade">
+        {{fs3-xp char=char abilityLearned=(action 'abilityLearned')}}
+      </div>
+     {{/if}}
   {{/if}}
   
   {{#if (not game.disabled_plugins.fs3combat)}}  
