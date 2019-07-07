@@ -7,17 +7,12 @@ export default Component.extend(AuthenticatedController, {
     rollString: null,
     confirmDeleteScenePose: false,
     confirmDeleteScene: false,
-    selectSkillRoll: false,
     selectLocation: false,
     newLocation: null,
     gameApi: service(),
     flashMessages: service(),
     gameSocket: service(),
     session: service(),
-  
-    rollEnabled: function() {
-      return this.get('abilities').length > 0;
-    }.property('abilities'),
   
     scenePoses: function() {
         return this.get('scene.poses').map(p => Ember.Object.create(p));  
@@ -44,17 +39,6 @@ export default Component.extend(AuthenticatedController, {
               if (response.error) {
                   return;
               }
-          });
-      },
-      
-      cookies() {
-          let api = this.get('gameApi');
-          api.requestOne('sceneCookies', { id: this.get('scene.id') }, null)
-          .then( (response) => {
-              if (response.error) {
-                  return;
-              }
-              this.get('flashMessages').success('You give cookies to the scene participants.');
           });
       },
       
@@ -132,29 +116,6 @@ export default Component.extend(AuthenticatedController, {
           });
       },
       
-      addSceneRoll() {
-          let api = this.get('gameApi');
-          
-          // Needed because the onChange event doesn't get triggered when the list is 
-          // first loaded, so the roll string is empty.
-          let rollString = this.get('rollString') || this.get('abilities')[0];
-          
-          if (!rollString) {
-              this.get('flashMessages').danger("You haven't selected an ability to roll.");
-              return;
-          }
-          this.set('selectSkillRoll', false);
-          this.set('rollString', null);
-
-          api.requestOne('addSceneRoll', { scene_id: this.get('scene.id'),
-              roll_string: rollString })
-          .then( (response) => {
-              if (response.error) {
-                  return;
-              }
-          });
-      },
-      
       changeSceneStatus(status) {
           let api = this.get('gameApi');
           if (status === 'share') {
@@ -203,7 +164,6 @@ export default Component.extend(AuthenticatedController, {
       scrollDown() {
         this.sendAction('scrollScene');
       },
-      
       
       pauseScroll() {
         this.sendAction('setScroll', false);

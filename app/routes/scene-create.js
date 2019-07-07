@@ -18,9 +18,9 @@ export default Route.extend(AuthenticatedRoute, {
                  icdate: appModel.game.scene_start_date }),
              sceneTypes: api.requestMany('sceneTypes'),
              plots: api.requestMany('plots'),
-             characters: api.requestMany('characters'),
+             characters: api.requestMany('characters', { select: 'include_staff' }),
              locations: api.request('sceneLocations'),
-             scenes: api.requestMany('scenes')
+             scenes: api.requestOne('scenes', { filter: 'Related' })
            })
            .then((model) => Ember.Object.create(model));
     }
