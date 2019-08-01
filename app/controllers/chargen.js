@@ -33,29 +33,36 @@ export default Controller.extend({
             desc: this.get('model.char.desc'),
             shortdesc: this.get('model.char.shortdesc'),
             rp_hooks: this.get('model.char.rp_hooks'),
+            profile_image: this.get('model.char.profile_image'),
             background: this.get('model.char.background'),
             lastwill: this.get('model.char.lastwill'),
-            fs3: this.get('fs3Data')
+            fs3: this.fs3Data
         };
     }, 
     
     
     toggleCharChanged: function() {
-        this.set('toggleCharChange', !this.get('toggleCharChange'));        
+        this.set('toggleCharChange', !this.toggleCharChange);        
     },
     
     actions: {
         
         genderChanged(val) {
-            this.set('model.char.demographics.gender.value', val.value);
+           this.set('model.char.demographics.gender.value', val.value);
         },
         
         groupChanged(group, val) {
             this.set(`model.char.groups.${group}`, val);
         },
         
+        fileUploaded(folder, name) {
+          folder = folder.toLowerCase();
+          name = name.toLowerCase();
+          this.set('model.char.profile_image', `${folder}/${name}`);
+        },
+        
         review() {
-            let api = this.get('gameApi');
+            let api = this.gameApi;
             api.requestOne('chargenSave', { char: this.buildQueryDataForChar() })
             .then( (response) => {
                 if (response.error) {
@@ -66,7 +73,7 @@ export default Controller.extend({
         },
         
         reset() {
-          let api = this.get('gameApi');
+          let api = this.gameApi;
           api.requestOne('chargenReset', { char: this.buildQueryDataForChar() })
           .then( (response) => {
             if (response.error) {
@@ -78,7 +85,7 @@ export default Controller.extend({
         },
         
         save() {
-            let api = this.get('gameApi');
+            let api = this.gameApi;
             api.requestOne('chargenSave', { char: this.buildQueryDataForChar() })
             .then( (response) => {
                 if (response.error) {
@@ -92,7 +99,7 @@ export default Controller.extend({
         },
         
         unsubmit() {
-            let api = this.get('gameApi');
+            let api = this.gameApi;
             api.requestOne('chargenUnsubmit')
             .then( (response) => {
                 if (response.error) {

@@ -3,7 +3,7 @@
 
 <p>This list shows scenes that are currently in progress.  Private scenes require an invitation, but open scenes are open to anyone.   You can play in-game or via the web portal.</p>
 
-<p>The unread flags <span class="label label-pill label-primary"> <i class="fa fa-flag" aria-hidden="true"></i></span> show new activity in public scenes or scenes you're watching/participating in.</p>
+<p>The unread flags <span class="label label-pill label-primary"> <i class="fa fa-flag" aria-label="New Activity Flag"></i></span> show new activity in public scenes or scenes you're watching/participating in.</p>
 
 {{#if isApproved}}
 <div class="row">
@@ -25,36 +25,16 @@
   <th>Participants / Location / Summary</th>
   <th>IC Date</th>
   <th>Last Activity</th>
+  <th></th>
 </tr>
 
 {{#each model.active as |scene| }}
 <tr>
     <td>
         {{#if scene.is_unread}}
-        <span class="label label-pill label-primary"> <i class="fa fa-flag" aria-hidden="true"></i></span>
+        <span class="label label-pill label-primary"> <i class="fa fa-flag" aria-label="New Activity"></i></span>
         {{/if}}
         
-        {{#if scene.watching}}
-          <button class="btn btn-default" {{action 'stopWatching' scene.id}}>
-          <i class="fa fa-eye-slash" aria-hidden="true"></i>
-            {{#bs-tooltip placement="left"}}Stop watching.{{/bs-tooltip}}
-          </button>
-        {{else}}
-          {{#if scene.can_view}}
-            <button class="btn btn-default" {{action 'watchScene' scene.id}}>
-            <i class="fa fa-eye" aria-hidden="true"></i>
-              {{#bs-tooltip placement="left"}}Watch scene.{{/bs-tooltip}}
-            </button>
-
-            {{#if (not scene.participating) }}
-              <button class="btn btn-default" {{action 'joinScene' scene.id}}>
-              <i class="fa fa-sign-in-alt" aria-hidden="true"></i>
-                {{#bs-tooltip placement="left"}}Join scene.{{/bs-tooltip}}
-              </button>
-            {{/if}}
-          {{/if}}
-      
-        {{/if}}
     </td>
     <td>
         
@@ -77,10 +57,15 @@
         {{/each}}
         
         {{#if (or scene.can_view (not scene.is_private))}}
-          <p>{{scene.location}}</p>
+          <p>{{#if scene.content_warning}}
+          {{content-warning-tag warning=scene.content_warning}}
+          {{/if}}
+ 
+            {{scene.location}}</p>
         
           {{#if scene.summary}}
-          <p>{{scene.summary}}</p>
+          <p>{{scene.summary}}
+          </p>
           {{/if}}
         {{/if}}
         
@@ -95,6 +80,26 @@
       
       {{scene.updated}} 
       
+    </td>
+    <td>
+      {{#if scene.watching}}
+        <a href="#" {{action 'stopWatching' scene.id}}>
+          {{tooltip-icon position='left' message='Stop watching scene.' icon='fa fa-eye-slash'}}
+        </a>
+      {{else}}
+        {{#if scene.can_view}}
+          <a href="#" {{action 'watchScene' scene.id}}>
+            {{tooltip-icon position='left' message='Watch scene.' icon='fa fa-eye'}}
+          </a>
+
+          {{#if (not scene.participating) }}
+            <a href="#" {{action 'joinScene' scene.id}}>
+              {{tooltip-icon position='left' message='Join scene.' icon='fa fa-sign-in-alt'}}
+            </a>
+          {{/if}}
+        {{/if}}
+    
+      {{/if}}
     </td>
 </tr>
 {{/each}}

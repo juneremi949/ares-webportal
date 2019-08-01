@@ -37,7 +37,10 @@
       <h2>Upcoming Events <i class="fa fa-calendar" aria-hidden="true"></i></h2>
   </div>
   {{#each model.upcoming_events as |event|}}
-  <p><b>{{#link-to 'event' event.id}}{{event.title}}{{/link-to}}</b>
+  <p><b>{{#link-to 'event' event.id}}{{event.title}}{{/link-to}}</b> 
+    {{#if event.content_warning}}
+    {{content-warning-tag warning=event.content_warning}}
+    {{/if}}
   <br>{{event.date}} {{event.start_datetime_local}} ({{event.start_time_standard}})</p>
   {{/each}}
    <br>
@@ -55,7 +58,11 @@
    </div>
    {{#each model.recent_scenes as |scene|}}
    <p>{{#link-to 'scene' scene.id}}{{scene.icdate}} - {{scene.title}}{{/link-to}}
-       {{scene-tag scene=scene}}<br></p>
+       {{scene-tag scene=scene}}
+       {{#if scene.content_warning}}
+       {{content-warning-tag warning=scene.content_warning}}
+       {{/if}}
+       <br></p>
    {{/each}}
    <br>
    <p>{{#link-to 'scenes'}}All Scenes{{/link-to}}</p>
@@ -86,15 +93,9 @@
        
    </div>
    {{#each model.recent_changes as |change|}}
-   {{#if (eq change.change_type 'char')}}
-   <p>{{#link-to 'char' change.name}}{{change.title}}{{/link-to}}</p>
-   {{else if (eq change.change_type 'event')}}
-   <p>{{#link-to 'event' change.name}}{{change.title}}{{/link-to}}</p>
-   {{else if (eq change.change_type 'wiki')}}
-   <p>{{#link-to 'wiki-page' change.name}}{{change.title}}{{/link-to}}</p>
-   {{else}}
-   <p>{{change.title}}</p>
-   {{/if}}
+   <p>
+     {{recent-change-link change=change}}
+   </p>
    {{/each}}
    
    <br>

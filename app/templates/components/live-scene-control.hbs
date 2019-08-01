@@ -34,21 +34,18 @@
                 
                 
                 {{#if (not pose.is_system_pose)}}
-                <i class="fas fa-clock" >
-                  {{#bs-tooltip placement="left"}}{{pose.timestamp}}{{/bs-tooltip}}
-                </i>
+                  {{tooltip-icon position='left' message=pose.timestamp icon='fas fa-clock'}}
                 {{/if}}
-                
                 {{#if (not scene.reload_required)}}
                   {{#if (and isApproved pose.can_edit)}}
                     {{#if (not pose.editActive)}}
-                    <a href="#" {{action 'editScenePose' pose}}><i class="fa fa-edit" aria-hidden="true">
-                      {{#bs-tooltip placement="left"}}Edit pose.{{/bs-tooltip}}
-                    </i></a>
+                    <a href="#" {{action 'editScenePose' pose}}>
+                      {{tooltip-icon position='left' message='Edit Pose' icon='fa fa-edit'}}
+                    </a>
                     {{#if pose.can_delete}}
-                    <a href="#" {{action (mut confirmDeleteScenePose) pose}}><i class="fa fa-trash" aria-hidden="true">
-                      {{#bs-tooltip placement="left"}}Delete pose.{{/bs-tooltip}}
-                    </i></a>
+                    <a href="#" {{action (mut confirmDeleteScenePose) pose}}>
+                      {{tooltip-icon position='left' message='Delete Pose' icon='fa fa-trash'}}                      
+                    </a>
                     {{/if}}
                     {{/if}}
                   {{/if}}
@@ -159,11 +156,12 @@
                       {{#if scene.can_edit}}
                       <li>{{#link-to 'scene-edit' scene.id}}Edit Scene{{/link-to}}</li>
                       <li><a href="#" {{action (mut selectLocation) true}}>Change Location</a></li>
-                      {{live-scene-places scene=scene}}
                       {{/if}}
                     
                       {{#if isApproved}}
                         {{#if (not scene.completed)}}
+
+                        {{live-scene-places scene=scene}}
                     
                         {{#if scene.fs3_enabled}}
                         {{live-scene-fs3 abilities=abilities scene=scene}}
@@ -178,7 +176,7 @@
                          {{/if}}
                        {{/if}}
                        
-                       {{#if scene.can_delete}}
+                       {{#if (and scene.can_delete scene.completed)}}
                        <li><a href="#" {{action (mut confirmDeleteScene) true}}>Delete Scene</a></li> 
                        {{/if}}
                    
