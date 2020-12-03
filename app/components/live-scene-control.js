@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { observer } from '@ember/object';
 import AuthenticatedController from 'ares-webportal/mixins/authenticated-controller';
 
 export default Component.extend(AuthenticatedController, {
@@ -16,21 +17,26 @@ export default Component.extend(AuthenticatedController, {
     reportReason: null,
     poseType: null,
     poseChar: null,
+    commandResponse: null,
     gameApi: service(),
     flashMessages: service(),
     gameSocket: service(),
     session: service(),
 
-    init: function() {
-      this._super(...arguments);
+    updatePoseControls: function() {
       this.set('poseType', { title: 'Pose', id: 'pose' });
-    },
-      
-    didInsertElement: function() {
       if (this.scene) {
         this.set('poseChar', this.get('scene.poseable_chars')[0]);
       }
     },
+    
+    didInsertElement: function() {
+      this.updatePoseControls();
+    },
+    
+    sceneObserver: observer('scene', function() {
+      this.updatePoseControls();
+    }),
     
     poseTypes: computed(function() {
       return [
@@ -55,6 +61,10 @@ export default Component.extend(AuthenticatedController, {
     
     cookiesExtraInstalled: computed(function() {
       return this.get('scene.extras_installed').some(e => e == 'cookies');
+    }),
+    
+    rpgExtraInstalled: computed(function() {
+      return this.get('scene.extras_installed').some(e => e == 'rpg');
     }),
     
     sceneAlerts: computed('scene.{is_watching,reload_required}', 'scrollPaused', function() {
@@ -178,6 +188,12 @@ export default Component.extend(AuthenticatedController, {
               if (response.error) {
                   return;
               }
+              if (response.command_response) {
+                this.set('commandResponse', response.command_response);
+              } else {
+                this.set('commandResponse', '');
+              }
+              
               this.scrollDown();
           });
       },

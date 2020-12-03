@@ -62,6 +62,11 @@ export default Controller.extend({
   actions: {
     addReply() {
       let api = this.gameApi;
+      
+      if (this.reply.length === 0) {
+          this.flashMessages.danger("You haven't entered anything.");
+          return;
+      }
       api.requestOne('jobReply', { id: this.get('model.job.id'), 
       reply: this.reply,
       admin_only: this.replyAdminOnly}, null)
@@ -135,6 +140,10 @@ export default Controller.extend({
         this.send('reloadModel');
         this.flashMessages.success('Participants saved.');
       });
+    },
+    
+    responseSelected: function(resp) {
+      this.set('reply', resp.value);
     }
   }
 });
